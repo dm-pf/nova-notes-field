@@ -7,15 +7,15 @@ use Laravel\Nova\Fields\Field;
 class NotesField extends Field
 {
     public $component = 'nova-notes-field';
+
     public $showOnCreation = false;
+
     public $showOnIndex = false;
 
     /**
      * NovaNotesField constructor.
      *
-     * @param $name
-     * @param null $attribute
-     * @param callable|null $resolveCallback
+     * @param  null  $attribute
      */
     public function __construct($name, $attribute = null, callable $resolveCallback = null)
     {
@@ -31,7 +31,7 @@ class NotesField extends Field
     /**
      * Sets the placeholder value displayed on the field.
      *
-     * @param string $placeholder
+     * @param  string  $placeholder
      * @return NotesField
      **/
     public function placeholder($placeholder)
@@ -42,7 +42,7 @@ class NotesField extends Field
     /**
      * Show or hide the AddNote input.
      *
-     * @param bool $addingNotesEnabled
+     * @param  bool  $addingNotesEnabled
      * @return NotesField
      */
     public function addingNotesEnabled($addingNotesEnabled = true)
@@ -53,7 +53,7 @@ class NotesField extends Field
     /**
      * Show or hide the AddNote input.
      *
-     * @param boolean $fullWidth
+     * @param  bool  $fullWidth
      * @return NotesField
      **/
     public function fullWidth($fullWidth = true)

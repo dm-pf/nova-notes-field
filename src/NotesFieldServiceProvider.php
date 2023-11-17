@@ -2,10 +2,10 @@
 
 namespace Outl1ne\NovaNotesField;
 
-use Laravel\Nova\Nova;
-use Laravel\Nova\Events\ServingNova;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Laravel\Nova\Events\ServingNova;
+use Laravel\Nova\Nova;
 use Outl1ne\NovaTranslationsLoader\LoadsNovaTranslations;
 
 class NotesFieldServiceProvider extends ServiceProvider
@@ -15,30 +15,30 @@ class NotesFieldServiceProvider extends ServiceProvider
     public function boot()
     {
         // Load migrations
-        $this->loadMigrationsFrom(__DIR__ . '/../migrations');
+        $this->loadMigrationsFrom(__DIR__.'/../migrations');
 
         // Publish migrations
         $this->publishes([
-            __DIR__ . '/../migrations' => database_path('migrations'),
+            __DIR__.'/../migrations' => database_path('migrations'),
         ], 'migrations');
 
         // Config
         $this->publishes([
-            __DIR__ . '/../config/nova-notes-field.php' => config_path('nova-notes-field.php'),
+            __DIR__.'/../config/nova-notes-field.php' => config_path('nova-notes-field.php'),
         ], 'config');
 
         // Load translations
-        $this->loadTranslations(__DIR__ . '/../lang', 'nova-notes-field', true);
+        $this->loadTranslations(__DIR__.'/../lang', 'nova-notes-field', true);
 
         $this->mergeConfigFrom(
-            __DIR__ . '/../config/nova-notes-field.php',
+            __DIR__.'/../config/nova-notes-field.php',
             'nova-notes-field'
         );
 
         // Serve assets
         Nova::serving(function (ServingNova $event) {
-            Nova::script('nova-notes-field', __DIR__ . '/../dist/js/entry.js');
-            Nova::style('nova-notes-field', __DIR__ . '/../dist/css/entry.css');
+            Nova::script('nova-notes-field', __DIR__.'/../dist/js/entry.js');
+            Nova::style('nova-notes-field', __DIR__.'/../dist/css/entry.css');
         });
 
         // Load routes
@@ -49,12 +49,14 @@ class NotesFieldServiceProvider extends ServiceProvider
 
     protected function routes()
     {
-        if ($this->app->routesAreCached()) return;
+        if ($this->app->routesAreCached()) {
+            return;
+        }
 
         Route::middleware(['nova'])
             ->prefix('nova-vendor/nova-notes')
             ->namespace('\Outl1ne\NovaNotesField\Http\Controllers')
-            ->group(__DIR__ . '/../routes/api.php');
+            ->group(__DIR__.'/../routes/api.php');
     }
 
     public static function getTableName()

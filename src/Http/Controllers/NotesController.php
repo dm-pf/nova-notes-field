@@ -2,9 +2,9 @@
 
 namespace Outl1ne\NovaNotesField\Http\Controllers;
 
-use Laravel\Nova\Nova;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Laravel\Nova\Nova;
 use Outl1ne\NovaNotesField\Models\Note;
 
 class NotesController extends Controller
@@ -13,7 +13,9 @@ class NotesController extends Controller
     public function getNotes(Request $request)
     {
         $validationResult = $this->validateRequest($request);
-        if ($validationResult['has_errors'] === true) return response($validationResult['errors'], 400);
+        if ($validationResult['has_errors'] === true) {
+            return response($validationResult['errors'], 400);
+        }
 
         $model = $validationResult['model'];
         $displayOrder = config('nova-notes-field.display_order', 'DESC');
@@ -30,12 +32,16 @@ class NotesController extends Controller
     public function addNote(Request $request)
     {
         $validationResult = $this->validateRequest($request);
-        if ($validationResult['has_errors'] === true) return response($validationResult['errors'], 400);
+        if ($validationResult['has_errors'] === true) {
+            return response($validationResult['errors'], 400);
+        }
 
         $model = $validationResult['model'];
         $note = $request->input('note');
 
-        if (empty($note)) return response(['errors' => ['note' => 'required']], 400);
+        if (empty($note)) {
+            return response(['errors' => ['note' => 'required']], 400);
+        }
 
         $model->addNote($note, true, false);
 
@@ -47,9 +53,13 @@ class NotesController extends Controller
     {
         $noteText = $request->input('note');
 
-        if (empty($noteText)) return response(['errors' => ['note' => 'required']], 400);
+        if (empty($noteText)) {
+            return response(['errors' => ['note' => 'required']], 400);
+        }
 
-        if (!$note->can_edit) return response()->json(['error' => 'unauthorized'], 400);
+        if (! $note->can_edit) {
+            return response()->json(['error' => 'unauthorized'], 400);
+        }
 
         $note->update([
             'text' => $noteText,
@@ -62,17 +72,25 @@ class NotesController extends Controller
     public function deleteNote(Request $request)
     {
         $validationResult = $this->validateRequest($request);
-        if ($validationResult['has_errors'] === true) return response()->json($validationResult['errors'], 400);
+        if ($validationResult['has_errors'] === true) {
+            return response()->json($validationResult['errors'], 400);
+        }
 
         $model = $validationResult['model'];
         $noteId = $request->input('noteId');
 
-        if (empty($noteId)) return response()->json(['errors' => ['noteId' => 'required']], 400);
+        if (empty($noteId)) {
+            return response()->json(['errors' => ['noteId' => 'required']], 400);
+        }
 
         $note = $model->notes()->where('id', $noteId)->first();
-        if (empty($note)) return response('', 204);
+        if (empty($note)) {
+            return response('', 204);
+        }
 
-        if (!$note->canDelete) return response()->json(['error' => 'unauthorized'], 400);
+        if (! $note->canDelete) {
+            return response()->json(['error' => 'unauthorized'], 400);
+        }
 
         $model->deleteNote($noteId);
 
@@ -85,13 +103,18 @@ class NotesController extends Controller
         $resourceName = $request->get('resourceName');
 
         $errors = [];
-        if (empty($resourceId)) $errors['resourceId'] = 'required';
-        if (empty($resourceName)) $errors['resourceName'] = 'required';
+        if (empty($resourceId)) {
+            $errors['resourceId'] = 'required';
+        }
+        if (empty($resourceName)) {
+            $errors['resourceName'] = 'required';
+        }
 
-        if (!empty($resourceName)) {
+        if (! empty($resourceName)) {
             $resourceClass = Nova::resourceForKey($resourceName);
-            if (empty($resourceClass)) $errors['resourceName'] = 'invalid_name';
-            else {
+            if (empty($resourceClass)) {
+                $errors['resourceName'] = 'invalid_name';
+            } else {
                 $modelClass = $resourceClass::$model;
 
                 if (method_exists($modelClass, 'trashed')) {
@@ -100,12 +123,14 @@ class NotesController extends Controller
                     $model = $modelClass::find($resourceId);
                 }
 
-                if (empty($model)) $errors['resourceId'] = 'not_found';
+                if (empty($model)) {
+                    $errors['resourceId'] = 'not_found';
+                }
             }
         }
 
         return [
-            'has_errors' => sizeof($errors) > 0,
+            'has_errors' => count($errors) > 0,
             'errors' => $errors,
             'model' => isset($model) ? $model : null,
         ];

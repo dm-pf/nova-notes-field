@@ -1,38 +1,68 @@
 <template>
   <Modal :show="show" @modal-close="handleClose" @close-via-escape="$emit('close')">
-    <form @submit.prevent="handleConfirm" class="bg-white rounded-lg shadow-lg overflow-hidden" style="width: 460px">
-      <div class="p-8">
-        <heading :level="2" class="mb-6">{{ __('novaNotesField.deleteNoteTitle') }}</heading>
-        <p class="text-80 leading-normal">
-          {{ __('novaNotesField.deleteConfirmation') }}
-        </p>
-      </div>
+    <form
+      @submit.prevent="handleConfirm"
+      class="mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden"
+    >
+      <slot>
+        <ModalHeader v-text="__('novaNotesField.deleteNoteTitle')" />
+        <ModalContent>
+          <p class="leading-normal">
+            {{ __('novaNotesField.deleteConfirmation') }}
+          </p>
+        </ModalContent>
+      </slot>
 
-      <div class="bg-30 px-6 py-3 flex">
+      <ModalFooter>
         <div class="ml-auto">
-          <LinkButton type="button" @click.prevent="handleClose" class="o1-font-normal o1-h-9 o1-px-3 o1-mr-3">
-            {{ __('novaNotesField.cancel') }}
+          <LinkButton
+            type="button"
+            dusk="cancel-delete-button"
+            @click.prevent="handleClose"
+            class="mr-3"
+          >
+            {{ __('Cancel') }}
           </LinkButton>
 
-          <DangerButton id="confirm-delete-button" ref="confirmButton" type="submit">
-            {{ __('novaNotesField.delete') }}
-          </DangerButton>
+          <Button
+            type="submit"
+            ref="confirmButton"
+            dusk="confirm-delete-button"
+            :loading="working"
+            state="danger"
+            :label="__('novaNotesField.delete')"
+          />
         </div>
-      </div>
+      </ModalFooter>
     </form>
   </Modal>
 </template>
 
 <script>
+import {Button} from "laravel-nova-ui";
+
 export default {
+  components: {
+    Button,
+  },
+
   props: ['show'],
+
+  emits: ['confirm', 'close'],
+
+  data: () => ({
+    working: false,
+  }),
 
   methods: {
     handleClose() {
-      this.$emit('close');
+      this.$emit('close')
+      this.working = false
     },
+
     handleConfirm() {
-      this.$emit('confirm');
+      this.$emit('confirm')
+      this.working = true
     },
   },
 };

@@ -21,7 +21,7 @@
       @keydown.enter="onEnter"
     />
 
-    <div class="whitespace-no-wrap ml-2">
+    <div class="whitespace-no-wrap ml-2 flex o1-items-end">
       <DefaultButton
         class="o1-inline-flex o1-items-center o1-relative o1-ml-auto o1-whitespace-nowrap"
         @click="$emit('onSubmit')"
