@@ -1,9 +1,8 @@
 <template>
   <div :class="classes">
-    <h3 class="o1-text-gray-600 dark:o1-text-slate-400 o1-mb-4">{{ field.name }}</h3>
     <NoteInput
       v-if="field.addingNotesEnabled"
-      v-model.trim="note"
+      :note="note"
       @onSubmit="createNote"
       :loading="loading"
       :fullWidth="field.fullWidth"
@@ -46,7 +45,7 @@ export default {
   components: { Note, NoteInput, DeleteNoteConfirmationModal },
   props: ['resourceName', 'resourceId', 'field', 'extraClass'],
   data: () => ({
-    note: '',
+    note: {},
     loading: true,
     notes: [],
     showDeleteConfirmation: false,
@@ -57,6 +56,7 @@ export default {
     fullWidth: false,
   }),
   mounted() {
+    this.resetNewNote();
     this.fetchNotes();
   },
   computed: {
@@ -105,7 +105,7 @@ export default {
         Nova.error(this.__('There was a problem submitting the form.'));
       }
 
-      this.note = '';
+      this.resetNewNote();
 
       this.loading = false;
     },
@@ -125,13 +125,20 @@ export default {
       this.showDeleteConfirmation = false;
       this.loading = false;
     },
-    onNoteEdited({ note, editedText }) {
-      note.text = editedText;
+    onNoteEdited({ note, editedNote }) {
+      note.text = editedNote.text;
+      note.action_at = editedNote.action_at;
       this.fetchNotes();
     },
     onNoteDeleteRequested(note) {
       this.showDeleteConfirmation = true;
       this.noteToDelete = note;
+    },
+    resetNewNote() {
+      this.note = {
+        text: '',
+        action_at: '',
+      };
     },
   },
 };

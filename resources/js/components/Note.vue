@@ -1,7 +1,7 @@
 <template>
   <template v-if="isEditing">
     <NoteInput
-      v-model.trim="editedText"
+      :note="editedNote"
       @onSubmit="editNote"
       :loading="loading"
       :fullWidth="fullWidth"
@@ -48,15 +48,19 @@
             v-if="!note.system && note.can_edit"
             class="o1-text-xs hover:o1-underline o1-cursor-pointer o1-text-primary-400 o1-mr-2"
             @click="onEditRequested"
-            >[{{ __('novaNotesField.edit') }}]</span
-          >
+            >[{{ __('novaNotesField.edit') }}]</span>
+
           <span
             v-if="!note.system && note.can_delete"
-            class="o1-text-xs hover:o1-underline o1-cursor-pointer"
+            class="o1-text-xs hover:o1-underline o1-cursor-pointer o1-mr-2"
             style="color: #e74c3c"
             @click="$emit('onDeleteRequested', note)"
-            >[{{ __('novaNotesField.delete') }}]</span
-          >
+            >[{{ __('novaNotesField.delete') }}]</span>
+
+          <span
+            v-if="note.action_at"
+            class="o1-text-xs o1-text-orange-500 o1-mr-2 dark:o1-text-amber-400 o1-bg-primary-500"
+            >[Action date: {{ formattedActionAtDate }}]</span>
         </div>
 
         <!-- Content -->
@@ -75,17 +79,20 @@ export default {
   props: ['note', 'dateFormat', 'fullWidth', 'trixEnabled'],
   data: () => ({
     isEditing: false,
-    editedText: '',
+    editedNote: {},
     loading: false,
   }),
   computed: {
+    formattedActionAtDate() {
+      return format(new Date(this.note.action_at), 'dd MMM yyyy');
+    },
     formattedCreatedAtDate() {
       return format(new Date(this.note.created_at), this.dateFormat);
     },
   },
   methods: {
     onEditRequested() {
-      this.editedText = this.note.text;
+      this.editedNote = this.note;
       this.isEditing = true;
     },
     async editNote() {
@@ -93,10 +100,10 @@ export default {
 
       try {
         await Nova.request().patch(`/nova-vendor/nova-notes/notes/${this.note.id}`, {
-          note: this.editedText,
+          note: this.editedNote,
         });
         this.isEditing = false;
-        this.$emit('noteEdited', { note: this.note, editedText: this.editedText });
+        this.$emit('noteEdited', { note: this.note, editedNote: this.editedNote });
       } catch (e) {
         Nova.error('Unknown error when trying to edit the note.');
       }

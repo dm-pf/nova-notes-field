@@ -11,9 +11,21 @@ class Note extends Model
 {
     protected $table = 'nova_notes';
 
-    protected $casts = ['system' => 'bool'];
+    protected $casts = [
+        'action_at' => 'date',
+        'system' => 'bool',
+    ];
 
-    protected $fillable = ['model_id', 'model_type', 'text', 'created_by', 'system', 'notable_type', 'notable_id'];
+    protected $fillable = [
+        'model_id',
+        'model_type',
+        'text',
+        'action_at',
+        'created_by',
+        'system',
+        'notable_type',
+        'notable_id',
+    ];
 
     protected $hidden = ['createdBy', 'notable_type', 'notable_id'];
 
@@ -75,7 +87,9 @@ class Note extends Model
             return $createdBy->$avatarCallableOrFnName ?? null;
         }
 
-        return ! empty($createdBy->email) ? 'https://www.gravatar.com/avatar/'.md5(strtolower($createdBy->email)).'?s=300' : null;
+        return ! empty($createdBy->email) ? 'https://www.gravatar.com/avatar/'.md5(
+            strtolower($createdBy->email)
+        ).'?s=300' : null;
     }
 
     public function getCanDeleteAttribute()

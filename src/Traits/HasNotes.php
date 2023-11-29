@@ -2,7 +2,9 @@
 
 namespace Outl1ne\NovaNotesField\Traits;
 
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
+use Outl1ne\NovaNotesField\Models\Note;
 use Outl1ne\NovaNotesField\NotesFieldServiceProvider;
 
 trait HasNotes
@@ -10,18 +12,19 @@ trait HasNotes
     /**
      * Creates a new note and attaches it to the model.
      *
-     * @param  string  $note The note text which can contain raw HTML.
-     * @param  bool  $user Enables or disables the use of `Auth::user()` to set as the creator.
-     * @param  bool  $system Defines whether the note is system created and can be deleted or not.
-     * @return \Outl1ne\NovaNotesField\Models\Note
-     **/
-    public function addNote($note, $user = true, $system = true)
+     * @param  bool  $user  Enables or disables the use of `Auth::user()` to set as the creator.
+     * @param  bool  $system  Defines whether the note is system created and can be deleted or not.
+     */
+    public function addNote(array $noteForm, bool $user = true, bool $system = true): Note
     {
-        $user = $user ? Auth::user() : null;
+        $createdBy = $user ? Auth::user() : null;
+        $text = Arr::get($noteForm, 'text');
+        $actionAt = Arr::get($noteForm, 'action_at');
 
         return $this->notes()->create([
-            'text' => $note,
-            'created_by' => isset($user) ? $user->id : null,
+            'text' => $text,
+            'action_at' => $actionAt ? now()->parse($actionAt) : null,
+            'created_by' => $createdBy?->id,
             'system' => $system,
         ]);
     }
@@ -29,15 +32,17 @@ trait HasNotes
     /**
      * Edit a note with the given ID and text.
      *
-     * @param  int|string  $noteId The ID of the note to edit.
-     * @param  string  $text The note text which can contain raw HTML.
-     * @return \Outl1ne\NovaNotesField\Models\Note
-     **/
-    public function editNote($noteId, $text)
+     * @param  int  $noteId  The ID of the note to edit.
+     */
+    public function editNote(int $noteId, array $noteForm): Note
     {
+        $text = Arr::get($noteForm, 'text');
+        $actionAt = Arr::get($noteForm, 'action_at');
+
         $note = $this->notes()->where('id', '=', $noteId)->firstOrFail();
         $note->update([
             'text' => $text,
+            'action_at' => $actionAt ? now()->parse($actionAt) : null,
         ]);
 
         return $note;

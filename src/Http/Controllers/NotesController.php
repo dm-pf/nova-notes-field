@@ -4,6 +4,7 @@ namespace Outl1ne\NovaNotesField\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Arr;
 use Laravel\Nova\Nova;
 use Outl1ne\NovaNotesField\Models\Note;
 
@@ -39,7 +40,7 @@ class NotesController extends Controller
         $model = $validationResult['model'];
         $note = $request->input('note');
 
-        if (empty($note)) {
+        if (empty($note) || empty($note['text'])) {
             return response(['errors' => ['note' => 'required']], 400);
         }
 
@@ -51,9 +52,11 @@ class NotesController extends Controller
     // PATCH /notes/{note}
     public function editNote(Request $request, Note $note)
     {
-        $noteText = $request->input('note');
+        $noteForm = $request->input('note');
+        $text = Arr::get($noteForm, 'text');
+        $actionAt = Arr::get($noteForm, 'action_at');
 
-        if (empty($noteText)) {
+        if (empty($text)) {
             return response(['errors' => ['note' => 'required']], 400);
         }
 
@@ -62,7 +65,8 @@ class NotesController extends Controller
         }
 
         $note->update([
-            'text' => $noteText,
+            'text' => $text,
+            'action_at' => $actionAt ? now()->parse($actionAt) : null,
         ]);
 
         return response('', 204);
