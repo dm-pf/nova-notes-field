@@ -21,6 +21,13 @@
       @onDeleteRequested="onNoteDeleteRequested"
     />
 
+    <p
+      v-if="notesToShow.length === 0"
+      class="o1-p-4 o1-italic o1-text-center"
+    >
+      No notes here yet!
+    </p>
+
     <div class="o1-flex o1-justify-center o1-mb-3 o1-mt-3" v-if="hasMoreToShow">
       <DefaultButton style="height: 24px; line-height: 24px" @click="maxToShow = void 0">
         <!-- Cast to String to fix runtime crash in Nova 3.8.0 to 3.8.2 -->
@@ -64,6 +71,7 @@ export default {
       return {
         resourceId: this.resourceId,
         resourceName: this.resourceName,
+        field: this.field.attribute,
       };
     },
     notesToShow() {

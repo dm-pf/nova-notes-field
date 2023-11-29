@@ -18,9 +18,21 @@ class NotesController extends Controller
             return response($validationResult['errors'], 400);
         }
 
+        $notesRelationship = $request->get('field');
+        $notesRelationshipAllowed = in_array(
+            $request->get('field'),
+            [
+                'notesProjects',
+                'notesApplications',
+            ],
+            true
+        );
+
         $model = $validationResult['model'];
         $displayOrder = config('nova-notes-field.display_order', 'DESC');
-        $notes = $model->notes()->orderBy('created_at', $displayOrder)->orderBy('id', $displayOrder)->get();
+        $notes = $notesRelationshipAllowed
+            ? $model->getAttribute($notesRelationship)
+            : $model->notes()->orderBy('created_at', $displayOrder)->orderBy('id', $displayOrder)->get();
 
         return response()->json([
             'date_format' => config('nova-notes-field.date_format', 'dd MMM yyyy HH:mm'),
