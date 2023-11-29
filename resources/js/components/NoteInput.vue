@@ -25,12 +25,12 @@
           @keydown.enter="onEnter"
         />
 
-        <div class="mt-3">
+        <div class="o1-mt-3 o1-w-fit">
           <label for="">Action date (optional)</label>
           <Input type="date" v-model="note.action_at"/>
         </div>
 
-        <div class="mt-3">
+        <div class="o1-my-5">
           <DefaultButton
             class="o1-inline-flex o1-items-center o1-relative o1-ml-auto o1-whitespace-nowrap"
             @click="submit"
@@ -113,6 +113,7 @@ export default {
 
     submit() {
       this.$emit('onSubmit', this.note);
+      this.cancel();
     },
   },
 
