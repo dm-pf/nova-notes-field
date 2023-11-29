@@ -3,6 +3,7 @@
     <NoteInput
       :note="editedNote"
       @onSubmit="editNote"
+      @onCancel="stopEditing"
       :loading="loading"
       :fullWidth="fullWidth"
       :trixEnabled="trixEnabled"
@@ -109,6 +110,10 @@ export default {
       }
 
       this.loading = false;
+    },
+    stopEditing() {
+      this.isEditing = false;
+      this.editedNote = {};
     },
   },
 };
