@@ -5,6 +5,7 @@ namespace Outl1ne\NovaNotesField\Models;
 use Gate;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
+use Outl1ne\NovaNotesField\Events\NoteSaved;
 use Outl1ne\NovaNotesField\NotesFieldServiceProvider;
 
 class Note extends Model
@@ -14,6 +15,10 @@ class Note extends Model
     protected $casts = [
         'action_at' => 'date',
         'system' => 'bool',
+    ];
+
+    protected $dispatchesEvents = [
+        'saved' => NoteSaved::class,
     ];
 
     protected $fillable = [

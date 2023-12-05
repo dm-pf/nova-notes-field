@@ -29,10 +29,17 @@ class NotesController extends Controller
         );
 
         $model = $validationResult['model'];
+        $model->loadMissing('notes.history');
+
         $displayOrder = config('nova-notes-field.display_order', 'DESC');
+        $sortingMethod = strtolower($displayOrder) === 'asc' ? 'sortBy' : 'sortByDesc';
+
         $notes = $notesRelationshipAllowed
             ? $model->getAttribute($notesRelationship)
-            : $model->notes()->orderBy('created_at', $displayOrder)->orderBy('id', $displayOrder)->get();
+            : $model->notes
+                ->$sortingMethod('created_at')
+                ->values()
+                ->toArray();
 
         return response()->json([
             'date_format' => config('nova-notes-field.date_format', 'dd MMM yyyy HH:mm'),

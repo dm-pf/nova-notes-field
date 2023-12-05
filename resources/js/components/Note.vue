@@ -24,7 +24,7 @@
         >
           {{ __('novaNotesField.systemUserAbbreviation') }}
         </div>
-        <img class="o1-w-12 o1-h-12" v-else-if="note.created_by_avatar_url" :src="note.created_by_avatar_url" alt="" />
+        <img class="o1-w-12 o1-h-12" v-else-if="note.created_by_avatar_url" :src="note.created_by_avatar_url" alt=""/>
         <div
           v-else
           class="o1-w-12 o1-h-12 o1-text-sm o1-font-bold o1-bg-gray-50 o1-text-gray-700 dark:o1-text-gray-400"
@@ -34,34 +34,40 @@
         </div>
       </div>
 
-      <div>
+      <div class="o1-w-full">
         <!-- Title area -->
         <div class="o1-mb-2">
-          <span class="o1-font-bold o1-text-base o1-text-gray-700 o1-mr-2 dark:o1-text-gray-400">
-            {{ note.created_by_name ? note.created_by_name : __('novaNotesField.systemUserName') }}
-          </span>
+          <div class="o1-flex o1-justify-between o1-items-center">
+            <div>
+              <span class="o1-font-bold o1-text-base o1-text-gray-700 o1-mr-2 dark:o1-text-gray-400">
+                {{ note.created_by_name ? note.created_by_name : __('novaNotesField.systemUserName') }}
+              </span>
 
-          <span class="o1-text-xs o1-text-gray-700 o1-mr-2 dark:o1-text-gray-400">
-            {{ formattedCreatedAtDate }}{{ note.system ? ` [${__('novaNotesField.systemUserName')}]` : '' }}
-          </span>
+              <a :href="'/resources/notes/' + note.id" class="o1-text-xs o1-text-gray-700 o1-mr-2 dark:o1-text-gray-400">
+                {{ formattedCreatedAtDate }}{{ note.system ? ` [${__('novaNotesField.systemUserName')}]` : '' }}{{ note?.history?.length > 1 ? ` - ${__('novaNotesField.edited')}` : '' }}
+              </a>
 
-          <span
-            v-if="!note.system && note.can_edit"
-            class="o1-text-xs hover:o1-underline o1-cursor-pointer o1-text-primary-400 o1-mr-2"
-            @click="onEditRequested"
-            >[{{ __('novaNotesField.edit') }}]</span>
+              <span
+                v-if="note.action_at"
+                class="o1-text-xs o1-text-orange-500 o1-mr-2 dark:o1-text-amber-400 o1-bg-primary-500"
+              >[Action date: {{ formattedActionAtDate }}]</span>
+            </div>
 
-          <span
-            v-if="!note.system && note.can_delete"
-            class="o1-text-xs hover:o1-underline o1-cursor-pointer o1-mr-2"
-            style="color: #e74c3c"
-            @click="$emit('onDeleteRequested', note)"
-            >[{{ __('novaNotesField.delete') }}]</span>
+            <div>
+              <span
+                v-if="!note.system && note.can_edit"
+                class="o1-text-xs hover:o1-underline o1-cursor-pointer o1-text-primary-400 o1-mr-2"
+                @click="onEditRequested"
+              >[{{ __('novaNotesField.edit') }}]</span>
 
-          <span
-            v-if="note.action_at"
-            class="o1-text-xs o1-text-orange-500 o1-mr-2 dark:o1-text-amber-400 o1-bg-primary-500"
-            >[Action date: {{ formattedActionAtDate }}]</span>
+              <span
+                v-if="!note.system && note.can_delete"
+                class="o1-text-xs hover:o1-underline o1-cursor-pointer o1-mr-2"
+                style="color: #e74c3c"
+                @click="$emit('onDeleteRequested', note)"
+              >[{{ __('novaNotesField.delete') }}]</span>
+            </div>
+          </div>
         </div>
 
         <!-- Content -->
@@ -73,7 +79,7 @@
 
 <script>
 import NoteInput from './NoteInput';
-import { format } from 'date-fns';
+import {format} from 'date-fns';
 
 export default {
   components: { NoteInput },
