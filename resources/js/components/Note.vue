@@ -54,6 +54,10 @@
             </div>
 
             <div>
+              <a :href="'/resources/notes/' + note.id" class="o1-text-xs o1-text-blue-500 o1-mr-2 dark:o1-text-blue-400">
+                [{{ __('novaNotesField.details') }}]
+              </a>
+
               <span
                 v-if="!note.system && note.can_edit"
                 class="o1-text-xs hover:o1-underline o1-cursor-pointer o1-text-primary-400 o1-mr-2"

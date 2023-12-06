@@ -4,6 +4,7 @@
   "novaNotesField.showMoreNotes": "Show all notes (:hiddenNoteCount more)",
   "novaNotesField.edit": "Edit note",
   "novaNotesField.edited": "Edited",
+  "novaNotesField.details": "Note details",
   "novaNotesField.updateNote": "Update note",
   "novaNotesField.delete": "Delete note",
   "novaNotesField.deleteConfirmation": "Are you sure you want to delete this note?",
