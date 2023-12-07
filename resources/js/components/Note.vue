@@ -55,7 +55,7 @@
 
             <div>
               <a :href="'/resources/notes/' + note.id" class="o1-text-xs o1-text-blue-500 o1-mr-2 dark:o1-text-blue-400">
-                [{{ __('novaNotesField.details') }}]
+                [{{ __('novaNotesField.history') }}]
               </a>
 
               <span
