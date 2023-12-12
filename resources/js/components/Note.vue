@@ -50,26 +50,26 @@
               <span
                 v-if="note.action_at"
                 class="o1-text-xs o1-text-orange-500 o1-mr-2 dark:o1-text-amber-400 o1-bg-primary-500"
-              >[Action date: {{ formattedActionAtDate }}]</span>
+              >(Action date: {{ formattedActionAtDate }})</span>
             </div>
 
             <div>
               <a :href="'/resources/notes/' + note.id" class="o1-text-xs o1-text-blue-500 o1-mr-2 dark:o1-text-blue-400">
-                [{{ __('novaNotesField.history') }}]
+                {{ __('novaNotesField.history') }}
               </a>
 
               <span
                 v-if="!note.system && note.can_edit"
                 class="o1-text-xs hover:o1-underline o1-cursor-pointer o1-text-primary-400 o1-mr-2"
                 @click="onEditRequested"
-              >[{{ __('novaNotesField.edit') }}]</span>
+              >{{ __('novaNotesField.edit') }}</span>
 
               <span
                 v-if="!note.system && note.can_delete"
                 class="o1-text-xs hover:o1-underline o1-cursor-pointer o1-mr-2"
                 style="color: #e74c3c"
                 @click="$emit('onDeleteRequested', note)"
-              >[{{ __('novaNotesField.delete') }}]</span>
+              >{{ __('novaNotesField.delete') }}</span>
             </div>
           </div>
         </div>
