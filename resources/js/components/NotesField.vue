@@ -17,6 +17,7 @@
       :key="note.id"
       :date-format="dateFormat"
       :trixEnabled="trixEnabled"
+      :displayNotableInfo="field.displayNotableInfo"
       @noteEdited="onNoteEdited"
       @onDeleteRequested="onNoteDeleteRequested"
     />

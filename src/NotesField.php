@@ -24,6 +24,7 @@ class NotesField extends Field
         $this->withMeta([
             'placeholder' => null,
             'addingNotesEnabled' => true,
+            'displayNotableInfo' => false,
             'fullWidth' => config('nova-notes-field.full_width_inputs', false),
         ]);
     }
@@ -48,6 +49,11 @@ class NotesField extends Field
     public function addingNotesEnabled($addingNotesEnabled = true)
     {
         return $this->withMeta(['addingNotesEnabled' => $addingNotesEnabled]);
+    }
+
+    public function displayNotableInfo($displayNotableInfo = false)
+    {
+        return $this->withMeta(['displayNotableInfo' => $displayNotableInfo]);
     }
 
     /**
