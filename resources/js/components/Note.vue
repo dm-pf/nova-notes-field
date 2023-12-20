@@ -72,6 +72,17 @@
               >{{ __('novaNotesField.delete') }}</span>
             </div>
           </div>
+          <p v-if="displayNotableInfo">
+            <a
+                v-if="note.notable_link"
+                :href="note.notable_link"
+                class="o1-text-xs"
+              >{{ note.notable_name }}
+            </a>
+            <span v-else class="o1-text-xs">
+                {{ note.notable_name }}
+            </span>
+          </p>
         </div>
 
         <!-- Content -->
@@ -87,7 +98,7 @@ import {format} from 'date-fns';
 
 export default {
   components: { NoteInput },
-  props: ['note', 'dateFormat', 'fullWidth', 'trixEnabled'],
+  props: ['note', 'dateFormat', 'fullWidth', 'trixEnabled', 'displayNotableInfo'],
   data: () => ({
     isEditing: false,
     editedNote: {},

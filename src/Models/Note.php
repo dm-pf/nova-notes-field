@@ -32,9 +32,20 @@ class Note extends Model
         'notable_id',
     ];
 
-    protected $hidden = ['createdBy', 'notable_type', 'notable_id'];
+    protected $hidden = [
+        'createdBy',
+        'notable_type',
+        'notable_id'
+    ];
 
-    protected $appends = ['created_by_avatar_url', 'created_by_name', 'can_delete', 'can_edit'];
+    protected $appends = [
+        'created_by_avatar_url',
+        'created_by_name',
+        'can_delete',
+        'can_edit',
+        'notable_name',
+        'notable_link'
+    ];
 
     public function __construct(array $attributes = [])
     {
@@ -45,6 +56,23 @@ class Note extends Model
     public function notable()
     {
         return $this->morphTo();
+    }
+
+    public function getNotableNameAttribute(): ?string
+    {
+        return $this->notable->name ?? null;
+    }
+
+    public function getNotableLinkAttribute(): ?string
+    {
+        if (! $this->notable->novaResourceClass) {
+            return null;
+        }
+
+        return route('nova.pages.detail', [
+            'resource' => app()->make($this->notable->novaResourceClass)::uriKey(),
+            'resourceId' => $this->notable->id,
+        ]);
     }
 
     public function createdBy()
