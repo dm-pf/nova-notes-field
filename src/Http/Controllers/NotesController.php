@@ -106,7 +106,7 @@ class NotesController extends Controller
             return response()->json(['errors' => ['noteId' => 'required']], 400);
         }
 
-        $note = $model->notes()->where('id', $noteId)->first();
+        $note = Note::find($noteId);
         if (empty($note)) {
             return response('', 204);
         }
@@ -115,7 +115,7 @@ class NotesController extends Controller
             return response()->json(['error' => 'unauthorized'], 400);
         }
 
-        $model->deleteNote($noteId);
+        $note->delete();
 
         return response('', 204);
     }
