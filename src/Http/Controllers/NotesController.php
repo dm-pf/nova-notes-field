@@ -135,16 +135,11 @@ class NotesController extends Controller
 
         if (! empty($resourceName)) {
             $resourceClass = Nova::resourceForKey($resourceName);
+
             if (empty($resourceClass)) {
                 $errors['resourceName'] = 'invalid_name';
             } else {
-                $modelClass = $resourceClass::$model;
-
-                if (method_exists($modelClass, 'trashed')) {
-                    $model = $modelClass::withTrashed()->find($resourceId);
-                } else {
-                    $model = $modelClass::find($resourceId);
-                }
+                $model = $resourceClass::$model::withoutGlobalScopes()->find($resourceId);
 
                 if (empty($model)) {
                     $errors['resourceId'] = 'not_found';
