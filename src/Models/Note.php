@@ -55,7 +55,7 @@ class Note extends Model
 
     public function notable()
     {
-        return $this->morphTo();
+        return $this->morphTo()->withoutGlobalScopes();
     }
 
     public function getNotableNameAttribute(): ?string
